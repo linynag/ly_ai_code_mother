@@ -3,6 +3,7 @@ package com.ly.lyaicodemother.model.vo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 public class UserVO implements Serializable {
