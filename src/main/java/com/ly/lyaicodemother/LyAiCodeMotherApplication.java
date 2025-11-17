@@ -1,9 +1,11 @@
 package com.ly.lyaicodemother;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
+@MapperScan("com.ly.lyaicodemother.mapper")
 public class LyAiCodeMotherApplication {
 
     public static void main(String[] args) {
