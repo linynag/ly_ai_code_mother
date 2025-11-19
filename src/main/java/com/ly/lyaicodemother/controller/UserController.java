@@ -9,10 +9,7 @@ import com.ly.lyaicodemother.constant.UserConstant;
 import com.ly.lyaicodemother.exception.BusinessException;
 import com.ly.lyaicodemother.exception.ErrorCode;
 import com.ly.lyaicodemother.exception.ThrowUtils;
-import com.ly.lyaicodemother.model.dto.user.UserAddRequest;
-import com.ly.lyaicodemother.model.dto.user.UserQueryRequest;
-import com.ly.lyaicodemother.model.dto.user.UserRegisterRequest;
-import com.ly.lyaicodemother.model.dto.user.UserUpdateRequest;
+import com.ly.lyaicodemother.model.dto.user.*;
 import com.ly.lyaicodemother.model.entity.User;
 import com.ly.lyaicodemother.model.vo.LoginUserVO;
 import com.ly.lyaicodemother.model.vo.UserVO;
@@ -36,6 +33,16 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+
+    @PostMapping("/login")
+public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+    ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
+    String userAccount = userLoginRequest.getUserAccount();
+    String userPassword = userLoginRequest.getUserPassword();
+    LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
+    return ResultUtils.success(loginUserVO);
+}
 
     /**
      * 用户注册

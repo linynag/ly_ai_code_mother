@@ -3,6 +3,7 @@ import Home from '@/views/Home.vue'
 import Products from '@/views/Products.vue'
 import About from '@/views/About.vue'
 import Login from '@/views/Login.vue'
+import UserManagement from '@/views/UserManagement.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +32,12 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/user-management',
+      name: 'userManagement',
+      component: UserManagement,
+      meta: { requiresAuth: true, title: '用户管理' }
     }
   ],
 })
