@@ -3,9 +3,13 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import { setupAuthGuard } from '@/utils/auth'
 
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/reset.css'
+
+// 设置权限守卫
+setupAuthGuard(router)
 
 const app = createApp(App)
 

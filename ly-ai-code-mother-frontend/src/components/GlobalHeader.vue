@@ -65,6 +65,7 @@ import {
 } from '@ant-design/icons-vue'
 import { useLoginUserStore } from '@/stores/loginUser'
 import { userLogout } from '@/api/userController'
+import { hasAdminPermission } from '@/utils/auth'
 
 // 获取登录用户信息
 const loginUserStore = useLoginUserStore()
@@ -73,41 +74,46 @@ const router = useRouter()
 const selectedKeys = ref<string[]>(['home'])
 
 // 菜单配置项
-const menuItems = computed(() => {
-  const baseMenus = [
-    {
-      key: 'home',
-      label: '首页',
-      path: '/'
-    },
-    {
-      key: 'products',
-      label: '产品',
-      path: '/products'
-    },
-    {
-      key: 'about',
-      label: '关于我们',
-      path: '/about'
-    },
-    {
-      key: 'contact',
-      label: '联系我们',
-      path: '/contact'
+  const menuItems = computed(() => {
+    const baseMenus = [
+      {
+        key: 'home',
+        label: '首页',
+        path: '/'
+      },
+      {
+        key: 'products',
+        label: '产品',
+        path: '/products'
+      },
+      {
+        key: 'about',
+        label: '关于我们',
+        path: '/about'
+      },
+      {
+        key: 'contact',
+        label: '联系我们',
+        path: '/contact'
+      }
+    ]
+
+    // 如果用户是管理员，添加用户管理菜单
+    if (hasAdminPermission()) {
+      baseMenus.push({
+        key: 'userManagement',
+        label: '用户管理',
+        path: '/user-management'
+      })
+      baseMenus.push({
+        key: 'adminTest',
+        label: '管理员测试',
+        path: '/admin-test'
+      })
     }
-  ]
 
-  // 如果用户已登录，添加用户管理菜单
-  if (loginUserStore.isLoggedIn()) {
-    baseMenus.push({
-      key: 'userManagement',
-      label: '用户管理',
-      path: '/user-management'
-    })
-  }
-
-  return baseMenus
-})
+    return baseMenus
+  })
 
 // 菜单点击事件
 const handleMenuClick = ({ key }: { key: string }) => {

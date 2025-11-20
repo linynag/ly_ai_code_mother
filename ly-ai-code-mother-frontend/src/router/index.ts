@@ -37,7 +37,13 @@ const router = createRouter({
       path: '/user-management',
       name: 'userManagement',
       component: UserManagement,
-      meta: { requiresAuth: true, title: '用户管理' }
+      meta: { requiresAuth: true, requiresAdmin: true, title: '用户管理' }
+    },
+    {
+      path: '/admin-test',
+      name: 'AdminTest',
+      component: () => import('@/views/AdminTest.vue'),
+      meta: { requiresAdmin: true }
     }
   ],
 })

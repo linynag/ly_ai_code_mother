@@ -48,11 +48,15 @@
         </div>
         <div class="search-actions-inline">
           <a-button type="primary" @click="handleSearch" :loading="loading" size="small">
-            <template #icon><SearchOutlined /></template>
+            <template #icon>
+              <SearchOutlined/>
+            </template>
             搜索
           </a-button>
           <a-button @click="handleReset" size="small">
-            <template #icon><ReloadOutlined /></template>
+            <template #icon>
+              <ReloadOutlined/>
+            </template>
             重置
           </a-button>
         </div>
@@ -68,7 +72,9 @@
       />
       <a-space style="margin-left: 16px">
         <a-button danger :loading="batchLoading">
-          <template #icon><DeleteOutlined /></template>
+          <template #icon>
+            <DeleteOutlined/>
+          </template>
           批量删除
         </a-button>
         <a-button @click="selectedRowKeys = []">
@@ -91,32 +97,38 @@
           :scroll="{ x: 'max-content' }"
           class="user-table"
         >
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'action'">
-          <div class="action-buttons">
-            <a-button type="link" @click="handleView(record)" size="small">
-              <template #icon><EyeOutlined /></template>
-              查看
-            </a-button>
-            <a-button type="link" @click="handleEdit(record)" size="small">
-              <template #icon><EditOutlined /></template>
-              编辑
-            </a-button>
-            <a-popconfirm
-              title="确定要删除这个用户吗？"
-              @confirm="handleDelete(record)"
-              ok-text="确定"
-              cancel-text="取消"
-            >
-              <a-button type="link" danger size="small">
-                <template #icon><DeleteOutlined /></template>
-                删除
-              </a-button>
-            </a-popconfirm>
-          </div>
-        </template>
-      </template>
-    </a-table>
+          <template #bodyCell="{ column, record }">
+            <template v-if="column.key === 'action'">
+              <div class="action-buttons">
+                <a-button type="link" @click="handleView(record)" size="small">
+                  <template #icon>
+                    <EyeOutlined/>
+                  </template>
+                  查看
+                </a-button>
+                <a-button type="link" @click="handleEdit(record)" size="small">
+                  <template #icon>
+                    <EditOutlined/>
+                  </template>
+                  编辑
+                </a-button>
+                <a-popconfirm
+                  title="确定要删除这个用户吗？"
+                  @confirm="handleDelete(record)"
+                  ok-text="确定"
+                  cancel-text="取消"
+                >
+                  <a-button type="link" danger size="small">
+                    <template #icon>
+                      <DeleteOutlined/>
+                    </template>
+                    删除
+                  </a-button>
+                </a-popconfirm>
+              </div>
+            </template>
+          </template>
+        </a-table>
       </div>
     </div>
 
@@ -209,7 +221,7 @@
         wrapper-col="{ span: 18 }"
       >
         <a-form-item label="用户ID" name="id">
-          <a-input v-model:value="userForm.id" disabled />
+          <a-input v-model:value="userForm.id" disabled/>
         </a-form-item>
 
         <a-form-item label="用户账号" name="userAccount">
@@ -273,11 +285,11 @@
         <a-descriptions-item label="用户名">
           {{ currentUser.userName }}
         </a-descriptions-item>
-<!--        <a-descriptions-item label="用户状态">-->
-<!--          <a-tag :color="currentUser.userStatus === 1 ? 'green' : 'red'">-->
-<!--            {{ currentUser.userStatus === 1 ? '启用' : '禁用' }}-->
-<!--          </a-tag>-->
-<!--        </a-descriptions-item>-->
+        <!--        <a-descriptions-item label="用户状态">-->
+        <!--          <a-tag :color="currentUser.userStatus === 1 ? 'green' : 'red'">-->
+        <!--            {{ currentUser.userStatus === 1 ? '启用' : '禁用' }}-->
+        <!--          </a-tag>-->
+        <!--        </a-descriptions-item>-->
         <a-descriptions-item label="用户头像">
           <a-avatar :src="currentUser.userAvatar" :size="48">
             {{ currentUser.userName?.charAt(0) }}
@@ -295,24 +307,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted, h } from 'vue'
-import { message } from 'ant-design-vue'
+import {computed, h, onMounted, reactive, ref} from 'vue'
+import {message} from 'ant-design-vue'
 import {
-  PlusOutlined,
-  SearchOutlined,
-  ReloadOutlined,
-  EyeOutlined,
-  EditOutlined,
   DeleteOutlined,
-  DownloadOutlined
+  EditOutlined,
+  EyeOutlined,
+  ReloadOutlined,
+  SearchOutlined
 } from '@ant-design/icons-vue'
 import {
-  listUserVoByPage,
-  getUserVoById,
   addUser,
-  updateUser,
-  deleteUser
+  deleteUser,
+  getUserVoById,
+  listUserVoByPage,
+  updateUser
 } from '@/api/userController'
+import {hasAdminPermission} from '@/utils/auth'
+import router from "@/router";
 
 // 响应式数据
 const loading = ref(false)
@@ -371,9 +383,9 @@ const columns = [
     key: 'userAvatar',
     width: 60,
     fixed: 'left',
-    customRender: ({ text, record }: any) => {
+    customRender: ({text, record}: any) => {
       return text ?
-        h('div', { class: 'user-avatar-container' }, [
+        h('div', {class: 'user-avatar-container'}, [
           h('img', {
             src: text,
             alt: record.userName,
@@ -384,8 +396,8 @@ const columns = [
             }
           })
         ]) :
-        h('div', { class: 'user-avatar-container' }, [
-          h('div', { class: 'user-avatar-fallback' }, record.userName?.charAt(0) || '无')
+        h('div', {class: 'user-avatar-container'}, [
+          h('div', {class: 'user-avatar-fallback'}, record.userName?.charAt(0) || '无')
         ])
     }
   },
@@ -417,12 +429,12 @@ const columns = [
     dataIndex: 'userRole',
     key: 'userRole',
     width: 80,
-    customRender: ({ text }: any) => {
+    customRender: ({text}: any) => {
       const roleMap: any = {
-        'admin': { color: 'red', text: '管理员' },
-        'user': { color: 'blue', text: '用户' }
+        'admin': {color: 'red', text: '管理员'},
+        'user': {color: 'blue', text: '用户'}
       }
-      const roleInfo = roleMap[text] || { color: 'default', text: text }
+      const roleInfo = roleMap[text] || {color: 'default', text: text}
       return h('a-tag', {
         color: roleInfo.color
       }, roleInfo.text)
@@ -435,7 +447,7 @@ const columns = [
     width: 140,
     fixed: 'right',
     sorter: true,
-    customRender: ({ text }: any) => {
+    customRender: ({text}: any) => {
       return text ? new Date(text).toLocaleString('zh-CN') : ''
     },
     responsive: ['md']
@@ -463,24 +475,24 @@ const userForm = reactive({
 // 表单验证规则
 const formRules = {
   userAccount: [
-    { required: true, message: '请输入用户账号', trigger: 'blur' },
-    { min: 4, max: 20, message: '账号长度在 4 到 20 个字符', trigger: 'blur' },
-    { pattern: /^[a-zA-Z0-9_]+$/, message: '账号只能包含字母、数字和下划线', trigger: 'blur' }
+    {required: true, message: '请输入用户账号', trigger: 'blur'},
+    {min: 4, max: 20, message: '账号长度在 4 到 20 个字符', trigger: 'blur'},
+    {pattern: /^[a-zA-Z0-9_]+$/, message: '账号只能包含字母、数字和下划线', trigger: 'blur'}
   ],
   userName: [
-    { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 2, max: 20, message: '用户名长度在 2 到 20 个字符', trigger: 'blur' }
+    {required: true, message: '请输入用户名', trigger: 'blur'},
+    {min: 2, max: 20, message: '用户名长度在 2 到 20 个字符', trigger: 'blur'}
   ],
   userPassword: [
-    { required: true, message: '请输入用户密码', trigger: 'blur' },
-    { min: 6, message: '密码长度至少 6 个字符', trigger: 'blur' },
+    {required: true, message: '请输入用户密码', trigger: 'blur'},
+    {min: 6, message: '密码长度至少 6 个字符', trigger: 'blur'},
     {
       pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{6,}$/,
       message: '密码必须包含大小写字母和数字', trigger: 'blur'
     }
   ],
   checkPassword: [
-    { required: true, message: '请确认密码', trigger: 'blur' },
+    {required: true, message: '请确认密码', trigger: 'blur'},
     {
       validator: (rule: any, value: string) => {
         if (value && value !== userForm.userPassword) {
@@ -492,7 +504,7 @@ const formRules = {
     }
   ],
   userAvatar: [
-    { type: 'url', message: '请输入有效的URL', trigger: 'blur' }
+    {type: 'url', message: '请输入有效的URL', trigger: 'blur'}
   ]
 }
 
@@ -706,7 +718,7 @@ const handleTableChange = (pag: any) => {
 
 const handleView = async (record: any) => {
   try {
-    const response = await getUserVoById({ id: record.id })
+    const response = await getUserVoById({id: record.id})
     if (response.data.code === 0) {
       currentUser.value = response.data.data
       showDetailModal.value = true
@@ -735,7 +747,7 @@ const handleEdit = (record: any) => {
 
 const handleDelete = async (record: any) => {
   try {
-    const response = await deleteUser({ id: record.id })
+    const response = await deleteUser({id: record.id})
     if (response.data.code === 0) {
       message.success('用户删除成功')
       fetchUsers()
@@ -848,7 +860,7 @@ const batchDelete = async () => {
   try {
     // 批量删除逻辑
     await Promise.all(
-      selectedRowKeys.value.map(id => deleteUser({ id }))
+      selectedRowKeys.value.map(id => deleteUser({id}))
     )
     message.success('批量删除成功')
     selectedRowKeys.value = []
@@ -867,6 +879,12 @@ const exportUsers = () => {
 
 // 生命周期
 onMounted(() => {
+  // 检查管理员权限
+  if (!hasAdminPermission()) {
+    message.error('没有权限访问用户管理页面')
+    router.push('/')
+    return
+  }
   fetchUsers()
 })
 </script>
