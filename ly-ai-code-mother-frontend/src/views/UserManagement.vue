@@ -2,16 +2,6 @@
   <div class="user-management">
     <div class="page-header">
       <h1>用户管理</h1>
-      <a-space>
-        <a-button @click="exportUsers">
-          <template #icon><DownloadOutlined /></template>
-          导出
-        </a-button>
-        <a-button type="primary" @click="showAddModal = true">
-          <template #icon><PlusOutlined /></template>
-          添加用户
-        </a-button>
-      </a-space>
     </div>
 
     <!-- 搜索筛选 -->
@@ -23,7 +13,7 @@
             v-model:value="searchForm.userAccount"
             placeholder="请输入用户账号"
             allow-clear
-            style="width: 120px"
+            style="width: 110px"
           />
         </div>
         <div class="search-item compact">
@@ -32,7 +22,7 @@
             v-model:value="searchForm.userName"
             placeholder="请输入用户名"
             allow-clear
-            style="width: 120px"
+            style="width: 110px"
           />
         </div>
         <div class="search-item compact">
@@ -41,7 +31,7 @@
             v-model:value="searchForm.userRole"
             placeholder="请选择角色"
             allow-clear
-            style="width: 100px"
+            style="width: 90px"
           >
             <a-select-option value="admin">管理员</a-select-option>
             <a-select-option value="user">用户</a-select-option>
@@ -53,15 +43,15 @@
             v-model:value="searchForm.createTimeRange"
             type="daterange"
             placeholder="选择时间范围"
-            style="width: 180px"
+            style="width: 160px"
           />
         </div>
         <div class="search-actions-inline">
-          <a-button type="primary" @click="handleSearch" :loading="loading">
+          <a-button type="primary" @click="handleSearch" :loading="loading" size="small">
             <template #icon><SearchOutlined /></template>
             搜索
           </a-button>
-          <a-button @click="handleReset">
+          <a-button @click="handleReset" size="small">
             <template #icon><ReloadOutlined /></template>
             重置
           </a-button>
@@ -88,23 +78,27 @@
     </div>
 
     <!-- 用户列表 -->
-    <a-table
-      :columns="columns"
-      :data-source="userList"
-      :loading="loading"
-      :pagination="pagination"
-      row-key="id"
-      :row-selection="rowSelection"
-      @change="handleTableChange"
-    >
+    <div class="table-wrapper">
+      <div class="table-container">
+        <a-table
+          :columns="columns"
+          :data-source="userList"
+          :loading="loading"
+          :pagination="pagination"
+          row-key="id"
+          :row-selection="rowSelection"
+          @change="handleTableChange"
+          :scroll="{ x: 'max-content' }"
+          class="user-table"
+        >
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
-          <a-space>
-            <a-button type="link" @click="handleView(record)">
+          <div class="action-buttons">
+            <a-button type="link" @click="handleView(record)" size="small">
               <template #icon><EyeOutlined /></template>
               查看
             </a-button>
-            <a-button type="link" @click="handleEdit(record)">
+            <a-button type="link" @click="handleEdit(record)" size="small">
               <template #icon><EditOutlined /></template>
               编辑
             </a-button>
@@ -114,15 +108,17 @@
               ok-text="确定"
               cancel-text="取消"
             >
-              <a-button type="link" danger>
+              <a-button type="link" danger size="small">
                 <template #icon><DeleteOutlined /></template>
                 删除
               </a-button>
             </a-popconfirm>
-          </a-space>
+          </div>
         </template>
       </template>
     </a-table>
+      </div>
+    </div>
 
     <!-- 添加用户弹窗 -->
     <a-modal
@@ -257,12 +253,6 @@
           />
         </a-form-item>
 
-<!--        <a-form-item label="用户状态" name="userStatus">-->
-<!--          <a-radio-group v-model:value="userForm.userStatus">-->
-<!--            <a-radio :value="1">启用</a-radio>-->
-<!--            <a-radio :value="0">禁用</a-radio>-->
-<!--          </a-radio-group>-->
-<!--        </a-form-item>-->
       </a-form>
     </a-modal>
 
@@ -371,14 +361,15 @@ const columns = [
     title: 'ID',
     dataIndex: 'id',
     key: 'id',
-    width: 80,
-    fixed: 'left'
+    width: 60,
+    fixed: 'left',
+    responsive: ['lg']
   },
   {
     title: '头像',
     dataIndex: 'userAvatar',
     key: 'userAvatar',
-    width: 80,
+    width: 60,
     fixed: 'left',
     customRender: ({ text, record }: any) => {
       return text ?
@@ -402,27 +393,30 @@ const columns = [
     title: '用户账号',
     dataIndex: 'userAccount',
     key: 'userAccount',
-    width: 150,
-    ellipsis: true
+    width: 120,
+    ellipsis: true,
+    responsive: ['md']
   },
   {
     title: '用户名',
     dataIndex: 'userName',
     key: 'userName',
-    width: 120,
+    width: 100,
     ellipsis: true
   },
   {
     title: '用户简介',
     dataIndex: 'userProfile',
     key: 'userProfile',
-    ellipsis: true
+    ellipsis: true,
+    responsive: ['lg'],
+    width: 200
   },
   {
     title: '用户角色',
     dataIndex: 'userRole',
     key: 'userRole',
-    width: 100,
+    width: 80,
     customRender: ({ text }: any) => {
       const roleMap: any = {
         'admin': { color: 'red', text: '管理员' },
@@ -438,17 +432,18 @@ const columns = [
     title: '创建时间',
     dataIndex: 'createTime',
     key: 'createTime',
-    width: 180,
+    width: 140,
     fixed: 'right',
     sorter: true,
     customRender: ({ text }: any) => {
       return text ? new Date(text).toLocaleString('zh-CN') : ''
-    }
+    },
+    responsive: ['md']
   },
   {
     title: '操作',
     key: 'action',
-    width: 200,
+    width: 140,
     fixed: 'right'
   }
 ]
@@ -977,6 +972,73 @@ onMounted(() => {
   }
 }
 
+@media (max-width: 1200px) {
+  .search-row {
+    gap: 8px;
+  }
+
+  .search-item.compact {
+    gap: 4px;
+  }
+
+  .search-label {
+    font-size: 12px;
+    min-width: 35px;
+  }
+}
+
+/* 表格缩放优化 */
+@media screen and (max-width: 1400px) {
+  .user-management {
+    padding: 16px 12px;
+  }
+
+  .table-container {
+    font-size: 13px;
+  }
+
+  :deep(.ant-table-cell) {
+    padding: 8px 6px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .user-management {
+    padding: 12px 8px;
+  }
+
+  .table-container {
+    font-size: 12px;
+  }
+
+  :deep(.ant-table-cell) {
+    padding: 6px 4px;
+  }
+
+  :deep(.ant-table-thead > tr > th) {
+    padding: 10px 4px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .user-management {
+    padding: 8px 4px;
+  }
+
+  .table-container {
+    font-size: 11px;
+    border-radius: 0;
+  }
+
+  :deep(.ant-table-cell) {
+    padding: 4px 2px;
+  }
+
+  :deep(.ant-table-thead > tr > th) {
+    padding: 8px 2px;
+  }
+}
+
 /* 表格样式优化 */
 :deep(.ant-table-thead > tr > th) {
   background-color: #fafafa;
@@ -985,5 +1047,124 @@ onMounted(() => {
 
 :deep(.ant-table-tbody > tr:hover > td) {
   background-color: #f5f5f5;
+}
+
+/* 操作按钮样式 */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+}
+
+:deep(.action-buttons .ant-btn) {
+  padding: 0 4px;
+  font-size: 12px;
+  height: 24px;
+  line-height: 22px;
+}
+
+:deep(.action-buttons .ant-btn .anticon) {
+  font-size: 12px;
+}
+
+/* 表格包装器样式 */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* 表格容器样式 - 防止溢出 */
+.table-container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  background: #fff;
+  min-width: 600px; /* 防止过度压缩 */
+  position: relative;
+}
+
+.user-table {
+  width: 100%;
+}
+
+/* 表格响应式优化 */
+:deep(.ant-table) {
+  font-size: 14px;
+}
+
+:deep(.ant-table-content) {
+  overflow-x: auto;
+}
+
+:deep(.ant-table-cell) {
+  padding: 12px 8px;
+  word-break: break-word;
+}
+
+/* 防止表格内容溢出 */
+:deep(.ant-table-wrapper) {
+  overflow: hidden;
+}
+
+/* 响应式表格列宽调整 */
+@media (max-width: 1400px) {
+  :deep(.ant-table-cell) {
+    padding: 10px 6px;
+    font-size: 13px;
+  }
+
+  .action-buttons {
+    gap: 6px;
+  }
+
+  :deep(.action-buttons .ant-btn) {
+    padding: 0 3px;
+    font-size: 11px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 1200px) {
+  :deep(.ant-table-cell) {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 4px;
+    align-items: stretch;
+  }
+
+  :deep(.action-buttons .ant-btn) {
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  :deep(.ant-table-cell) {
+    padding: 6px 3px;
+    font-size: 11px;
+  }
+
+  .user-management {
+    padding: 12px 8px;
+  }
 }
 </style>
