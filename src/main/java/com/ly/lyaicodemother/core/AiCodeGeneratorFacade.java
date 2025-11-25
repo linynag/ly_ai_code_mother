@@ -36,20 +36,17 @@ public class AiCodeGeneratorFacade {
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成类型为空");
         }
-        return switch (codeGenTypeEnum) {
-            case HTML -> {
+        switch (codeGenTypeEnum) {
+            case HTML:
                 HtmlCodeResult result = aiCodeGeneratorService.generateHtmlCode(userMessage);
-                yield CodeFileSaverExecutor.executeSaver(result, CodeGenTypeEnum.HTML);
-            }
-            case MULTI_FILE -> {
-                MultiFileCodeResult result = aiCodeGeneratorService.generateMultiFileCode(userMessage);
-                yield CodeFileSaverExecutor.executeSaver(result, CodeGenTypeEnum.MULTI_FILE);
-            }
-            default -> {
+                return CodeFileSaverExecutor.executeSaver(result, CodeGenTypeEnum.HTML);
+            case MULTI_FILE:
+                MultiFileCodeResult multiFileResult = aiCodeGeneratorService.generateMultiFileCode(userMessage);
+                return CodeFileSaverExecutor.executeSaver(multiFileResult, CodeGenTypeEnum.MULTI_FILE);
+            default:
                 String errorMessage = "不支持的生成类型：" + codeGenTypeEnum.getValue();
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, errorMessage);
-            }
-        };
+        }
     }
 
     /**
@@ -62,20 +59,17 @@ public class AiCodeGeneratorFacade {
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成类型为空");
         }
-        return switch (codeGenTypeEnum) {
-            case HTML -> {
-                Flux<String> codeStream = aiCodeGeneratorService.generateHtmlCodeStream(userMessage);
-                yield processCodeStream(codeStream, CodeGenTypeEnum.HTML);
-            }
-            case MULTI_FILE -> {
-                Flux<String> codeStream = aiCodeGeneratorService.generateMultiFileCodeStream(userMessage);
-                yield processCodeStream(codeStream, CodeGenTypeEnum.MULTI_FILE);
-            }
-            default -> {
+        switch (codeGenTypeEnum) {
+            case HTML:
+                Flux<String> htmlCodeStream = aiCodeGeneratorService.generateHtmlCodeStream(userMessage);
+                return processCodeStream(htmlCodeStream, CodeGenTypeEnum.HTML);
+            case MULTI_FILE:
+                Flux<String> multiFileCodeStream = aiCodeGeneratorService.generateMultiFileCodeStream(userMessage);
+                return processCodeStream(multiFileCodeStream, CodeGenTypeEnum.MULTI_FILE);
+            default:
                 String errorMessage = "不支持的生成类型：" + codeGenTypeEnum.getValue();
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, errorMessage);
-            }
-        };
+        }
     }
 
 

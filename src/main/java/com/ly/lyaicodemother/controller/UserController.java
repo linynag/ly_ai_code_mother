@@ -17,6 +17,7 @@ import com.ly.lyaicodemother.service.UserService;
 import com.mybatisflex.core.paginate.Page;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,13 +37,13 @@ public class UserController {
 
 
     @PostMapping("/login")
-public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
-    ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
-    String userAccount = userLoginRequest.getUserAccount();
-    String userPassword = userLoginRequest.getUserPassword();
-    LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
-    return ResultUtils.success(loginUserVO);
-}
+    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
+        String userAccount = userLoginRequest.getUserAccount();
+        String userPassword = userLoginRequest.getUserPassword();
+        LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
+        return ResultUtils.success(loginUserVO);
+    }
 
     /**
      * 用户注册
