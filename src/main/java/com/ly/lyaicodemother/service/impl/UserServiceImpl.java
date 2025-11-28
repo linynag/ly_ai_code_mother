@@ -185,5 +185,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .orderBy(sortField, "ascend".equals(sortOrder));
     }
 
+    @Override
+    public boolean isAdmin(HttpServletRequest request) {
+        // 获取当前登录用户
+        User loginUser = this.getLoginUser(request);
+        return this.isAdmin(loginUser);
+    }
+
+    @Override
+    public boolean isAdmin(User user) {
+        // 检查用户是否为空
+        if (user == null || user.getUserRole() == null) {
+            return false;
+        }
+        // 判断用户角色是否为管理员
+        return UserRoleEnum.ADMIN.getValue().equals(user.getUserRole());
+    }
 
 }
