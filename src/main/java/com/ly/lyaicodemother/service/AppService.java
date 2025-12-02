@@ -2,10 +2,12 @@ package com.ly.lyaicodemother.service;
 
 import com.ly.lyaicodemother.model.dto.app.AppQueryRequest;
 import com.ly.lyaicodemother.model.entity.App;
+import com.ly.lyaicodemother.model.entity.User;
 import com.ly.lyaicodemother.model.vo.AppVO;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
 import jakarta.servlet.http.HttpServletRequest;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -131,4 +133,22 @@ public interface AppService extends IService<App> {
      * @param add 是否为新增
      */
     void validApp(App app, boolean add);
+
+    /**
+     * 应用对话生成代码
+     *
+     * @param appId 应用id
+     * @param userMessage 用户消息
+     * @param LoginUser 登录用户
+     * @return 代码流
+     */
+    Flux<String> chatToGenCode(Long appId, String userMessage, User LoginUser);
+
+    /**
+     * 应用部署
+     * @param appId 应用id
+     * @param loginUser 登录用户
+     * @return 部署 URL
+     */
+    String deployApp(Long appId, User loginUser);
 }

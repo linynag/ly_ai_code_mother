@@ -23,13 +23,16 @@ class AiCodeGeneratorFacadeTest {
     void generateAndSaveCode() {
         String userMessage = "请生成一个简单的多文件项目，包含 HTML、CSS 和 JS 文件，不超过 100 行代码";
         CodeGenTypeEnum codeGenTypeEnum = CodeGenTypeEnum.MULTI_FILE;
-        File savedDir = aiCodeGeneratorFacade.generateAndSaveCode(userMessage, codeGenTypeEnum);
+        Long appId = 1L;
+        File savedDir = aiCodeGeneratorFacade.generateAndSaveCode(userMessage, codeGenTypeEnum, appId);
         assertTrue(savedDir.exists());
     }
 
     @Test
     void generateAndSaveCodeStream() {
-        Flux<String> codeStream = aiCodeGeneratorFacade.generateAndSaveCodeStream("任务记录网站，不超过20行", CodeGenTypeEnum.MULTI_FILE);
+        Long appId = 1L;
+        Flux<String> codeStream =
+                aiCodeGeneratorFacade.generateAndSaveCodeStream("任务记录网站，不超过20行", CodeGenTypeEnum.MULTI_FILE, appId);
         // 阻塞等待所有数据收集完成
         List<String> result = codeStream.collectList().block();
         // 验证结果
