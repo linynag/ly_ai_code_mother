@@ -1,64 +1,37 @@
 <template>
-  <a-layout-footer class="global-footer">
-    <div class="footer-container">
-      <div class="footer-content">
-        <p class="copyright">
-          零代码生成平台项目 by linynag
-        </p>
-        <p class="copyright-sub">
-          © 2024 All Rights Reserved
-        </p>
-      </div>
+  <a-layout-footer class="footer">
+    <div class="footer-content">
+      <p class="copyright">
+        <a
+          href="https://www.codefather.cn"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="author-link"
+        >
+          编程导航原创项目 by 程序员鱼皮
+        </a>
+      </p>
     </div>
   </a-layout-footer>
 </template>
 
 <script setup lang="ts">
-// 全局底部组件
+// 无需额外的响应式数据
 </script>
 
 <style scoped>
-.global-footer {
-  background: #001529;
-  color: #fff;
-  padding: 24px 0;
-  margin-top: auto;
-}
-
-.footer-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-.footer-content {
+.footer {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
   text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  border-top: 1px solid rgba(102, 126, 234, 0.1);
 }
 
 .copyright {
-  margin: 0 0 8px 0;
-  font-size: 14px;
-  color: #fff;
-}
-
-.copyright-sub {
   margin: 0;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.65);
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .global-footer {
-    padding: 16px 0;
-  }
-  
-  .footer-container {
-    padding: 0 16px;
-  }
-  
-  .copyright {
-    font-size: 12px;
-  }
+  color: #666;
+  font-size: 14px;
 }
 </style>

@@ -1,50 +1,50 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/Home.vue'
-import Products from '@/views/Products.vue'
-import About from '@/views/About.vue'
-import Login from '@/views/Login.vue'
-import UserManagement from '@/views/UserManagement.vue'
+import HomePage from '@/pages/HomePage.vue'
+import UserLoginPage from '@/pages/user/UserLoginPage.vue'
+import UserRegisterPage from '@/pages/user/UserRegisterPage.vue'
+import UserManagePage from '@/pages/admin/UserManagePage.vue'
+import AppManagePage from '@/pages/admin/AppManagePage.vue'
+import AppChatPage from '@/pages/app/AppChatPage.vue'
+import AppEditPage from '@/pages/app/AppEditPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      name: '主页',
+      component: HomePage,
     },
     {
-      path: '/products',
-      name: 'products',
-      component: Products
+      path: '/user/login',
+      name: '用户登录',
+      component: UserLoginPage,
     },
     {
-      path: '/about',
-      name: 'about',
-      component: About
+      path: '/user/register',
+      name: '用户注册',
+      component: UserRegisterPage,
     },
     {
-      path: '/contact',
-      name: 'contact',
-      component: About // 暂时使用关于页面作为联系页面
+      path: '/admin/userManage',
+      name: '用户管理',
+      component: UserManagePage,
     },
     {
-      path: '/login',
-      name: 'login',
-      component: Login
+      path: '/admin/appManage',
+      name: '应用管理',
+      component: AppManagePage,
     },
     {
-      path: '/user-management',
-      name: 'userManagement',
-      component: UserManagement,
-      meta: { requiresAuth: true, requiresAdmin: true, title: '用户管理' }
+      path: '/app/chat/:id',
+      name: '应用对话',
+      component: AppChatPage,
     },
     {
-      path: '/admin-test',
-      name: 'AdminTest',
-      component: () => import('@/views/AdminTest.vue'),
-      meta: { requiresAdmin: true }
-    }
+      path: '/app/edit/:id',
+      name: '编辑应用',
+      component: AppEditPage,
+    },
   ],
 })
 

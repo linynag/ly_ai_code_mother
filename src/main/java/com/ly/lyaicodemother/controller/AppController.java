@@ -7,6 +7,7 @@ import com.ly.lyaicodemother.annotation.AuthCheck;
 import com.ly.lyaicodemother.common.BaseResponse;
 import com.ly.lyaicodemother.common.DeleteRequest;
 import com.ly.lyaicodemother.common.ResultUtils;
+import com.ly.lyaicodemother.constant.AppConstant;
 import com.ly.lyaicodemother.constant.UserConstant;
 import com.ly.lyaicodemother.exception.BusinessException;
 import com.ly.lyaicodemother.exception.ErrorCode;
@@ -19,6 +20,7 @@ import com.ly.lyaicodemother.model.vo.AppVO;
 import com.ly.lyaicodemother.service.AppService;
 import com.ly.lyaicodemother.service.UserService;
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -278,25 +280,30 @@ public class AppController {
     }
 
     /**
-     * 获取精选应用列表
+     * 分页获取精选应用列表
      *
-     * @param appQueryRequest
-     * @param request
-     * @return
+     * @param appQueryRequest 查询请求
+     * @return 精选应用列表
      */
-    @PostMapping("/featured/list")
-    public BaseResponse<List<AppVO>> listFeaturedApps(@RequestBody AppQueryRequest appQueryRequest,
-                                                      HttpServletRequest request) {
-        if (appQueryRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        long size = appQueryRequest.getPageSize();
-        // 限制爬虫
-        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        // 查询精选应用
-        List<AppVO> appVOList = appService.listFeaturedApps(appQueryRequest);
-        return ResultUtils.success(appVOList);
+    @PostMapping("/good/list/page/vo")
+    public BaseResponse<Page<AppVO>> listGoodAppVOByPage(@RequestBody AppQueryRequest appQueryRequest) {
+        ThrowUtils.throwIf(appQueryRequest == null, ErrorCode.PARAMS_ERROR);
+        // 限制每页最多 20 个
+        long pageSize = appQueryRequest.getPageSize();
+        ThrowUtils.throwIf(pageSize > 20, ErrorCode.PARAMS_ERROR, "每页最多查询 20 个应用");
+        long pageNum = appQueryRequest.getPageNum();
+        // 只查询精选的应用
+        appQueryRequest.setPriority(AppConstant.GOOD_APP_PRIORITY);
+        QueryWrapper queryWrapper = appService.getQueryWrapper(appQueryRequest);
+        // 分页查询
+        Page<App> appPage = appService.page(Page.of(pageNum, pageSize), queryWrapper);
+        // 数据封装
+        Page<AppVO> appVOPage = new Page<>(pageNum, pageSize, appPage.getTotalRow());
+        List<AppVO> appVOList = appService.getAppVOList(appPage.getRecords());
+        appVOPage.setRecords(appVOList);
+        return ResultUtils.success(appVOPage);
     }
+
 
     // endregion
 
