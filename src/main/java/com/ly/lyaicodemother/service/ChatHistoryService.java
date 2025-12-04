@@ -6,6 +6,7 @@ import com.ly.lyaicodemother.model.entity.User;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 
 import java.time.LocalDateTime;
 
@@ -46,9 +47,19 @@ public interface ChatHistoryService extends IService<ChatHistory> {
                                                User loginUser);
 
     /**
-     * 获取查询包装器
+     * 获取查询包装类，游标查询逻辑：
      * @param chatHistoryQueryRequest  对话历史查询请求
      * @return 查询包装器
      */
     QueryWrapper getQueryWrapper(ChatHistoryQueryRequest chatHistoryQueryRequest);
+
+
+    /**
+     * 加载应用的对话历史到内存中
+     * @param appId  应用id
+     * @param chatMemory  内存对象
+     * @param maxCount  最大加载数量
+     * @return 加载的对话历史数量
+     */
+    int loadChatHistoryToMemory(Long appId, MessageWindowChatMemory chatMemory, int maxCount);
 }

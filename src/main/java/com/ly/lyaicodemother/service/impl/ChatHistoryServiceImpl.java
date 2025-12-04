@@ -1,6 +1,7 @@
 package com.ly.lyaicodemother.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import com.ly.lyaicodemother.constant.UserConstant;
 import com.ly.lyaicodemother.exception.ErrorCode;
 import com.ly.lyaicodemother.exception.ThrowUtils;
@@ -15,17 +16,24 @@ import com.ly.lyaicodemother.service.ChatHistoryService;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 对话历史 服务层实现。
  *
  * @author linyang
  */
+@Slf4j
 @Service
 public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatHistory> implements ChatHistoryService {
     @Resource
@@ -123,6 +131,41 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
             queryWrapper.orderBy("createTime", false);
         }
         return queryWrapper;
+    }
+
+    @Override
+    public int loadChatHistoryToMemory(Long appId, MessageWindowChatMemory chatMemory, int maxCount) {
+        try {
+            QueryWrapper queryWrapper = QueryWrapper.create()
+                    .eq(ChatHistory::getAppId, appId)
+                    .orderBy(ChatHistory::getCreateTime, false)
+                    .limit(1, maxCount);// 起点是1而不是0是 为了排除最新的一条记录
+            List<ChatHistory> list = this.list(queryWrapper);
+            if (CollectionUtils.isEmpty(list)) {
+                return 0;
+            }
+            // 反转列表，确保按时间顺序添加，最新的在最后
+            Collections.reverse(list);
+
+            int loadCount = 0;
+
+            // 清空历史环境，再更新，避免重复添加
+            chatMemory.clear();
+            for (ChatHistory chatHistory : list) {
+                // 区分AI还是USER
+                if (ChatHistoryMessageTypeEnum.USER.equals(chatHistory.getMessageType())) {
+                    chatMemory.add(UserMessage.userMessage(chatHistory.getMessage()));
+                } else if (ChatHistoryMessageTypeEnum.AI.equals(chatHistory.getMessageType())) {
+                    chatMemory.add(AiMessage.aiMessage(chatHistory.getMessage()));
+                }
+                loadCount++;
+            }
+            log.info("加载{}条对话历史到内存", loadCount);
+            return loadCount;
+        } catch (Exception e) {
+            log.error("加载对话历史到内存失败 appId {} error {}", appId, e.getMessage(), e);
+        }
+        return 0;
     }
 
 
