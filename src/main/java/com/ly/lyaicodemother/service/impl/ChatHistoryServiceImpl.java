@@ -83,10 +83,13 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
 
 
     /**
-     * 获取查询包装类
+     * 获取查询包装类，游标查询逻辑：
+     * 1. 按应用ID、用户ID、消息类型筛选
+     * 2. 按创建时间降序排序
+     * 3. 如果提供了 lastCreateTime，只返回早于该时间的记录
      *
-     * @param chatHistoryQueryRequest
-     * @return
+     * @param chatHistoryQueryRequest 对话历史查询请求
+     * @return 查询包装类
      */
     @Override
     public QueryWrapper getQueryWrapper(ChatHistoryQueryRequest chatHistoryQueryRequest) {

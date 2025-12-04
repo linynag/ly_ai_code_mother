@@ -8,13 +8,13 @@
       <div class="header-right">
         <a-button type="default" @click="showAppDetail">
           <template #icon>
-            <InfoCircleOutlined/>
+            <InfoCircleOutlined />
           </template>
           应用详情
         </a-button>
         <a-button type="primary" @click="deployApp" :loading="deploying">
           <template #icon>
-            <CloudUploadOutlined/>
+            <CloudUploadOutlined />
           </template>
           部署按钮
         </a-button>
@@ -37,17 +37,17 @@
             <div v-if="message.type === 'user'" class="user-message">
               <div class="message-content">{{ message.content }}</div>
               <div class="message-avatar">
-                <a-avatar :src="loginUserStore.loginUser.userAvatar"/>
+                <a-avatar :src="loginUserStore.loginUser.userAvatar" />
               </div>
             </div>
             <div v-else class="ai-message">
               <div class="message-avatar">
-                <a-avatar :src="aiAvatar"/>
+                <a-avatar :src="aiAvatar" />
               </div>
               <div class="message-content">
-                <MarkdownRenderer v-if="message.content" :content="message.content"/>
+                <MarkdownRenderer v-if="message.content" :content="message.content" />
                 <div v-if="message.loading" class="loading-indicator">
-                  <a-spin size="small"/>
+                  <a-spin size="small" />
                   <span>AI 正在思考...</span>
                 </div>
               </div>
@@ -85,7 +85,7 @@
                 :disabled="!isOwner"
               >
                 <template #icon>
-                  <SendOutlined/>
+                  <SendOutlined />
                 </template>
               </a-button>
             </div>
@@ -99,7 +99,7 @@
           <div class="preview-actions">
             <a-button v-if="previewUrl" type="link" @click="openInNewTab">
               <template #icon>
-                <ExportOutlined/>
+                <ExportOutlined />
               </template>
               新窗口打开
             </a-button>
@@ -111,7 +111,7 @@
             <p>网站文件生成完成后将在这里展示</p>
           </div>
           <div v-else-if="isGenerating" class="preview-loading">
-            <a-spin size="large"/>
+            <a-spin size="large" />
             <p>正在生成网站...</p>
           </div>
           <iframe
@@ -144,30 +144,30 @@
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, onMounted, onUnmounted, ref} from 'vue'
-import {useRoute, useRouter} from 'vue-router'
-import {message} from 'ant-design-vue'
-import {useLoginUserStore} from '@/stores/loginUser'
+import { ref, onMounted, nextTick, onUnmounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { message } from 'ant-design-vue'
+import { useLoginUserStore } from '@/stores/loginUser'
 import {
-  deleteApp as deleteAppApi,
-  deployApp as deployAppApi,
   getAppVoById,
+  deployApp as deployAppApi,
+  deleteApp as deleteAppApi,
 } from '@/api/appController'
-import {listAppChatHistory} from '@/api/chatHistoryController'
-import {CodeGenTypeEnum} from '@/utils/codeGenTypes'
+import { listAppChatHistory } from '@/api/chatHistoryController'
+import { CodeGenTypeEnum } from '@/utils/codeGenTypes'
 import request from '@/request'
 
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
 import AppDetailModal from '@/components/AppDetailModal.vue'
 import DeploySuccessModal from '@/components/DeploySuccessModal.vue'
 import aiAvatar from '@/assets/aiAvatar.png'
-import {API_BASE_URL, getStaticPreviewUrl} from '@/config/env'
+import { API_BASE_URL, getStaticPreviewUrl } from '@/config/env'
 
 import {
   CloudUploadOutlined,
+  SendOutlined,
   ExportOutlined,
   InfoCircleOutlined,
-  SendOutlined,
 } from '@ant-design/icons-vue'
 
 const route = useRoute()
@@ -289,7 +289,7 @@ const fetchAppInfo = async () => {
   appId.value = id
 
   try {
-    const res = await getAppVoById({id: id as unknown as number})
+    const res = await getAppVoById({ id: id as unknown as number })
     if (res.data.code === 0 && res.data.data) {
       appInfo.value = res.data.data
 
@@ -544,7 +544,7 @@ const deleteApp = async () => {
   if (!appInfo.value?.id) return
 
   try {
-    const res = await deleteAppApi({id: appInfo.value.id})
+    const res = await deleteAppApi({ id: appInfo.value.id })
     if (res.data.code === 0) {
       message.success('删除成功')
       appDetailVisible.value = false

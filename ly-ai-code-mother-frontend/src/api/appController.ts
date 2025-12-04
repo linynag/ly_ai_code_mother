@@ -42,7 +42,7 @@ export async function getAppVoByIdByAdmin(
 }
 
 /** 此处后端没有提供注释 POST /app/admin/list/page/vo */
-export async function listAppVoByPageByAdmin(
+export async function listAppVoByPageAdmin(
   body: API.AppQueryRequest,
   options?: { [key: string]: any }
 ) {
@@ -131,6 +131,18 @@ export async function listGoodAppVoByPage(
   options?: { [key: string]: any }
 ) {
   return request<API.BaseResponsePageAppVO>('/app/good/list/page/vo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** 此处后端没有提供注释 POST /app/list/page/vo */
+export async function listAppVoByPage(body: API.AppQueryRequest, options?: { [key: string]: any }) {
+  return request<API.BaseResponsePageAppVO>('/app/list/page/vo', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

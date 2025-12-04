@@ -62,12 +62,6 @@ declare namespace API {
     message?: string
   }
 
-  type BaseResponseListAppVO = {
-    code?: number
-    data?: AppVO[]
-    message?: string
-  }
-
   type BaseResponseLoginUserVO = {
     code?: number
     data?: LoginUserVO
@@ -83,6 +77,12 @@ declare namespace API {
   type BaseResponsePageAppVO = {
     code?: number
     data?: PageAppVO
+    message?: string
+  }
+
+  type BaseResponsePageChatHistory = {
+    code?: number
+    data?: PageChatHistory
     message?: string
   }
 
@@ -110,6 +110,30 @@ declare namespace API {
     message?: string
   }
 
+  type ChatHistory = {
+    id?: number
+    message?: string
+    messageType?: string
+    appId?: number
+    userId?: number
+    createTime?: string
+    updateTime?: string
+    isDelete?: number
+  }
+
+  type ChatHistoryQueryRequest = {
+    pageNum?: number
+    pageSize?: number
+    sortField?: string
+    sortOrder?: string
+    id?: number
+    message?: string
+    messageType?: string
+    appId?: number
+    userId?: number
+    lastCreateTime?: string
+  }
+
   type chatToGenCodeParams = {
     appId: number
     message: string
@@ -127,6 +151,10 @@ declare namespace API {
     id: number
   }
 
+  type getInfo1Params = {
+    id: number
+  }
+
   type getInfoParams = {
     id: number
   }
@@ -137,6 +165,12 @@ declare namespace API {
 
   type getUserVOByIdParams = {
     id: number
+  }
+
+  type listAppChatHistoryParams = {
+    appId: number
+    pageSize?: number
+    lastCreateTime?: string
   }
 
   type LoginUserVO = {
@@ -150,8 +184,21 @@ declare namespace API {
     updateTime?: string
   }
 
+  type page1Params = {
+    page: PageChatHistory
+  }
+
   type PageAppVO = {
     records?: AppVO[]
+    pageNumber?: number
+    pageSize?: number
+    totalPage?: number
+    totalRow?: number
+    optimizeCountQuery?: boolean
+  }
+
+  type PageChatHistory = {
+    records?: ChatHistory[]
     pageNumber?: number
     pageSize?: number
     totalPage?: number
@@ -179,6 +226,10 @@ declare namespace API {
     totalPage?: number
     totalRow?: number
     optimizeCountQuery?: boolean
+  }
+
+  type remove1Params = {
+    id: number
   }
 
   type removeParams = {
