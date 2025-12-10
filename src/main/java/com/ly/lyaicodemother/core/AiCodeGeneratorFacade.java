@@ -1,7 +1,12 @@
 package com.ly.lyaicodemother.core;
 
+
+import cn.hutool.json.JSONUtil;
 import com.ly.lyaicodemother.ai.AiCodeGeneratorService;
 import com.ly.lyaicodemother.ai.AiCodeGeneratorServiceFactory;
+import com.ly.lyaicodemother.ai.message.AiResponseMessage;
+import com.ly.lyaicodemother.ai.message.ToolExecutedMessage;
+import com.ly.lyaicodemother.ai.message.ToolRequestMessage;
 import com.ly.lyaicodemother.ai.model.HtmlCodeResult;
 import com.ly.lyaicodemother.ai.model.MultiFileCodeResult;
 import com.ly.lyaicodemother.core.parse.CodeParserExecutor;
@@ -9,6 +14,9 @@ import com.ly.lyaicodemother.core.saver.CodeFileSaverExecutor;
 import com.ly.lyaicodemother.exception.BusinessException;
 import com.ly.lyaicodemother.exception.ErrorCode;
 import com.ly.lyaicodemother.model.enums.CodeGenTypeEnum;
+import dev.langchain4j.model.chat.response.ChatResponse;
+import dev.langchain4j.service.TokenStream;
+import dev.langchain4j.service.tool.ToolExecution;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,7 +57,7 @@ public class AiCodeGeneratorFacade {
                 MultiFileCodeResult multiFileResult = aiCodeGeneratorService.generateMultiFileCode(userMessage);
                 return CodeFileSaverExecutor.executeSaver(multiFileResult, CodeGenTypeEnum.MULTI_FILE, appId);
             case VUE_PROJECT:
-                Flux<String> vueProjectCodeStream = aiCodeGeneratorService.generateVueProjectCodeStream(appId, userMessage);
+                TokenStream vueProjectCodeStream = aiCodeGeneratorService.generateVueProjectCodeStream(appId, userMessage);
                 return CodeFileSaverExecutor.executeSaver(vueProjectCodeStream, CodeGenTypeEnum.VUE_PROJECT, appId);
             default:
                 String errorMessage = "不支持的生成类型：" + codeGenTypeEnum.getValue();
@@ -81,12 +89,43 @@ public class AiCodeGeneratorFacade {
                 Flux<String> multiFileCodeStream = aiCodeGeneratorService.generateMultiFileCodeStream(userMessage);
                 return processCodeStream(multiFileCodeStream, CodeGenTypeEnum.MULTI_FILE, appId);
             case VUE_PROJECT:
-                Flux<String> vueProjectCodeStream = aiCodeGeneratorService.generateVueProjectCodeStream(appId, userMessage);
-                return processCodeStream(vueProjectCodeStream, CodeGenTypeEnum.VUE_PROJECT, appId);
+                TokenStream vueProjectCodeStream = aiCodeGeneratorService.generateVueProjectCodeStream(appId, userMessage);
+                return processTokenStream(vueProjectCodeStream);
             default:
                 String errorMessage = "不支持的生成类型：" + codeGenTypeEnum.getValue();
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, errorMessage);
         }
+    }
+
+    /**
+     * 将 TokenStream 转换为 Flux<String>，并传递工具调用信息
+     *
+     * @param tokenStream TokenStream 对象
+     * @return Flux<String> 流式响应
+     */
+    private Flux<String> processTokenStream(TokenStream tokenStream) {
+        return Flux.create(sink -> {
+            tokenStream.onPartialResponse((String partialResponse) -> {
+                        AiResponseMessage aiResponseMessage = new AiResponseMessage(partialResponse);
+                        sink.next(JSONUtil.toJsonStr(aiResponseMessage));
+                    })
+                    .onPartialToolExecutionRequest((index, toolExecutionRequest) -> {
+                        ToolRequestMessage toolRequestMessage = new ToolRequestMessage(toolExecutionRequest);
+                        sink.next(JSONUtil.toJsonStr(toolRequestMessage));
+                    })
+                    .onToolExecuted((ToolExecution toolExecution) -> {
+                        ToolExecutedMessage toolExecutedMessage = new ToolExecutedMessage(toolExecution);
+                        sink.next(JSONUtil.toJsonStr(toolExecutedMessage));
+                    })
+                    .onCompleteResponse((ChatResponse response) -> {
+                        sink.complete();
+                    })
+                    .onError((Throwable error) -> {
+                        error.printStackTrace();
+                        sink.error(error);
+                    })
+                    .start();
+        });
     }
 
 
