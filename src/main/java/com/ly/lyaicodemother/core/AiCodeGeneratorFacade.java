@@ -109,11 +109,11 @@ public class AiCodeGeneratorFacade {
                         AiResponseMessage aiResponseMessage = new AiResponseMessage(partialResponse);
                         sink.next(JSONUtil.toJsonStr(aiResponseMessage));
                     })
-                    .onPartialToolExecutionRequest((index, toolExecutionRequest) -> {
-                        ToolRequestMessage toolRequestMessage = new ToolRequestMessage(toolExecutionRequest);
-                        sink.next(JSONUtil.toJsonStr(toolRequestMessage));
-                    })
+                    // .onToolExecuted((ToolExecution toolExecution) -> {
+                    // })
                     .onToolExecuted((ToolExecution toolExecution) -> {
+                        ToolRequestMessage toolRequestMessage = new ToolRequestMessage(toolExecution);
+                        sink.next(JSONUtil.toJsonStr(toolRequestMessage));
                         ToolExecutedMessage toolExecutedMessage = new ToolExecutedMessage(toolExecution);
                         sink.next(JSONUtil.toJsonStr(toolExecutedMessage));
                     })

@@ -80,7 +80,7 @@ public class AiCodeGeneratorServiceFactory {
     public AiCodeGeneratorService createAiCodeGeneratorService(Long appId) {
         // 根据appId创建不同的聊天内存
         MessageWindowChatMemory chatMemory = MessageWindowChatMemory.builder()
-                .maxMessages(20)
+                .maxMessages(50)
                 .id(appId)
                 .chatMemoryStore(redisChatMemoryStore)
                 .build();
@@ -99,7 +99,7 @@ public class AiCodeGeneratorServiceFactory {
     public AiCodeGeneratorService createAiCodeGeneratorService(Long appId, CodeGenTypeEnum codeGenTypeEnum) {
         // 根据appId创建不同的聊天内存
         MessageWindowChatMemory chatMemory = MessageWindowChatMemory.builder()
-                .maxMessages(20)
+                .maxMessages(50)
                 .id(appId)
                 .chatMemoryStore(redisChatMemoryStore)
                 .build();
