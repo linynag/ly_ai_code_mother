@@ -161,15 +161,15 @@ onMounted(() => {
     <div class="container">
       <!-- 网站标题和描述 -->
       <div class="hero-section">
-        <h1 class="hero-title">AI 应用生成平台</h1>
-        <p class="hero-description">一句话轻松创建网站应用</p>
+        <h1 class="hero-title">所思即所见</h1>
+        <p class="hero-description">与 AI 对话轻松创建应用和网站</p>
       </div>
 
       <!-- 用户提示词输入框 -->
       <div class="input-section">
         <a-textarea
           v-model:value="userPrompt"
-          placeholder="帮我创建个人博客网站"
+          placeholder="使用ThinkWave创建个人博客网站"
           :rows="4"
           :maxlength="1000"
           class="prompt-input"
@@ -282,9 +282,9 @@ onMounted(() => {
   padding: 0;
   min-height: 100vh;
   background:
-    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 8%, #e2e8f0 20%, #cbd5e1 100%),
-    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+    linear-gradient(180deg, #f3f5f1 0%, #ddfeed 8%, #ccfeec 20%, #f6feef 100%),
+    radial-gradient(circle at 20% 80%, rgba(56, 242, 248, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(128, 99, 197, 0.12) 0%, transparent 50%),
     radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
   position: relative;
   overflow: hidden;
