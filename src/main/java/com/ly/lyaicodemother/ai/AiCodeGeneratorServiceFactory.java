@@ -124,7 +124,7 @@ public class AiCodeGeneratorServiceFactory {
                     .chatMemory(chatMemory)
                     .build();
             default ->
-                    throw new BusinessException(ErrorCode.PARAMS_ERROR.SYSTEM_ERROR, "不支持的代码生成类型：" + codeGenTypeEnum);
+                    throw new BusinessException(ErrorCode.SYSTEM_ERROR, "不支持的代码生成类型：" + codeGenTypeEnum);
 
         };
     }

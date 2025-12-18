@@ -1,5 +1,6 @@
 package com.ly.lyaicodemother.service;
 
+import com.ly.lyaicodemother.model.dto.app.AppAddRequest;
 import com.ly.lyaicodemother.model.dto.app.AppQueryRequest;
 import com.ly.lyaicodemother.model.entity.App;
 import com.ly.lyaicodemother.model.entity.User;
@@ -158,4 +159,12 @@ public interface AppService extends IService<App> {
      * @return 部署 URL
      */
     String deployApp(Long appId, User loginUser);
+
+    /**
+     * 添加应用
+     * @param appAddRequest
+     * @param loginUser 登录用户
+     * @return 应用id
+     */
+    Long addApp(AppAddRequest appAddRequest, User loginUser);
 }

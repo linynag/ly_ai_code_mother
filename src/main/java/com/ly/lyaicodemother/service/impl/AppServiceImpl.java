@@ -1,9 +1,11 @@
 package com.ly.lyaicodemother.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.ly.lyaicodemother.ai.AiCodeGenTypeRoutingService;
 import com.ly.lyaicodemother.constant.AppConstant;
 import com.ly.lyaicodemother.core.AiCodeGeneratorFacade;
 import com.ly.lyaicodemother.core.builder.VueProjectBuilder;
@@ -12,6 +14,7 @@ import com.ly.lyaicodemother.exception.BusinessException;
 import com.ly.lyaicodemother.exception.ErrorCode;
 import com.ly.lyaicodemother.exception.ThrowUtils;
 import com.ly.lyaicodemother.mapper.AppMapper;
+import com.ly.lyaicodemother.model.dto.app.AppAddRequest;
 import com.ly.lyaicodemother.model.dto.app.AppQueryRequest;
 import com.ly.lyaicodemother.model.entity.App;
 import com.ly.lyaicodemother.model.entity.User;
@@ -61,6 +64,8 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
     private VueProjectBuilder vueProjectBuilder;
     @Resource
     private ScreenshotService screenshotService;
+    @Resource
+    private AiCodeGenTypeRoutingService aiCodeGenTypeRoutingService;
 
     @Override
     public Flux<String> chatToGenCode(Long appId, String message, User loginUser) {
@@ -143,6 +148,26 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         // 11.异步生成封面截图
         generateAppScreenshotAsync(appId, deployPath);
         return deployPath;
+    }
+
+    @Override
+    public Long addApp(AppAddRequest appAddRequest, User loginUser ) {
+        // 参数校验
+        String initPrompt = appAddRequest.getInitPrompt();
+        ThrowUtils.throwIf(StrUtil.isBlank(initPrompt), ErrorCode.PARAMS_ERROR, "初始化 prompt 不能为空");
+        // 构造入库对象
+        App app = new App();
+        BeanUtil.copyProperties(appAddRequest, app);
+        app.setUserId(loginUser.getId());
+        // 应用名称暂时为 initPrompt 前 12 位
+        app.setAppName(initPrompt.substring(0, Math.min(initPrompt.length(), 12)));
+        // 使用AI智能路由选择代码生成类型
+        CodeGenTypeEnum codeGenTypeEnum = aiCodeGenTypeRoutingService.routeCodeGenType(initPrompt);
+        app.setCodeGenType(codeGenTypeEnum.getValue());
+        // 插入数据库
+        boolean result = this.save(app);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        return app.getId();
     }
 
     /**
