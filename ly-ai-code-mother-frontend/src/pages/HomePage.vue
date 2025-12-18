@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { message } from 'ant-design-vue'
-import { useLoginUserStore } from '@/stores/loginUser'
-import { addApp, listMyAppVoByPage, listGoodAppVoByPage } from '@/api/appController'
-import { getDeployUrl } from '@/config/env'
+import {onMounted, reactive, ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {message} from 'ant-design-vue'
+import {useLoginUserStore} from '@/stores/loginUser'
+import {addApp, listGoodAppVoByPage, listMyAppVoByPage} from '@/api/appController'
+import {getDeployUrl} from '@/config/env'
 import AppCard from '@/components/AppCard.vue'
 
 const router = useRouter()
@@ -138,8 +138,8 @@ onMounted(() => {
 
   // 鼠标跟随光效
   const handleMouseMove = (e: MouseEvent) => {
-    const { clientX, clientY } = e
-    const { innerWidth, innerHeight } = window
+    const {clientX, clientY} = e
+    const {innerWidth, innerHeight} = window
     const x = (clientX / innerWidth) * 100
     const y = (clientY / innerHeight) * 100
 
@@ -192,7 +192,8 @@ onMounted(() => {
               '创建一个现代化的个人博客网站，包含文章列表、详情页、分类标签、搜索功能、评论系统和个人简介页面。采用简洁的设计风格，支持响应式布局，文章支持Markdown格式，首页展示最新文章和热门推荐。',
             )
           "
-          >个人博客网站</a-button
+        >个人博客网站
+        </a-button
         >
         <a-button
           type="default"
@@ -201,7 +202,8 @@ onMounted(() => {
               '设计一个专业的企业官网，包含公司介绍、产品服务展示、新闻资讯、联系我们等页面。采用商务风格的设计，包含轮播图、产品展示卡片、团队介绍、客户案例展示，支持多语言切换和在线客服功能。',
             )
           "
-          >企业官网</a-button
+        >企业官网
+        </a-button
         >
         <a-button
           type="default"
@@ -210,7 +212,8 @@ onMounted(() => {
               '构建一个功能完整的在线商城，包含商品展示、购物车、用户注册登录、订单管理、支付结算等功能。设计现代化的商品卡片布局，支持商品搜索筛选、用户评价、优惠券系统和会员积分功能。',
             )
           "
-          >在线商城</a-button
+        >在线商城
+        </a-button
         >
         <a-button
           type="default"
@@ -219,7 +222,8 @@ onMounted(() => {
               '制作一个精美的作品展示网站，适合设计师、摄影师、艺术家等创作者。包含作品画廊、项目详情页、个人简历、联系方式等模块。采用瀑布流或网格布局展示作品，支持图片放大预览和作品分类筛选。',
             )
           "
-          >作品展示网站</a-button
+        >作品展示网站
+        </a-button
         >
       </div>
 
@@ -281,11 +285,10 @@ onMounted(() => {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background:
-    linear-gradient(180deg, #f3f5f1 0%, #ddfeed 8%, #ccfeec 20%, #f6feef 100%),
-    radial-gradient(circle at 20% 80%, rgba(56, 242, 248, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(128, 99, 197, 0.12) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+  background: linear-gradient(180deg, #e7fefc 20%, #d0fefa 30%, #cafdeb 40%, #eee4d4 60%, #e7fefc 100%),
+  radial-gradient(circle at 20% 80%, rgba(56, 242, 248, 0.15) 0%, transparent 50%),
+  radial-gradient(circle at 80% 20%, rgba(128, 99, 197, 0.12) 0%, transparent 50%),
+  radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
   position: relative;
   overflow: hidden;
 }
@@ -298,16 +301,14 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image:
-    linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
-    linear-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(139, 92, 246, 0.04) 1px, transparent 1px);
-  background-size:
-    100px 100px,
-    100px 100px,
-    20px 20px,
-    20px 20px;
+  background-image: linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+  linear-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(139, 92, 246, 0.04) 1px, transparent 1px);
+  background-size: 100px 100px,
+  100px 100px,
+  20px 20px,
+  20px 20px;
   pointer-events: none;
   animation: gridFloat 20s ease-in-out infinite;
 }
@@ -320,15 +321,14 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    radial-gradient(
-      600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      rgba(59, 130, 246, 0.08) 0%,
-      rgba(139, 92, 246, 0.06) 40%,
-      transparent 80%
-    ),
-    linear-gradient(45deg, transparent 30%, rgba(59, 130, 246, 0.04) 50%, transparent 70%),
-    linear-gradient(-45deg, transparent 30%, rgba(139, 92, 246, 0.04) 50%, transparent 70%);
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(59, 130, 246, 0.08) 0%,
+    rgba(139, 92, 246, 0.06) 40%,
+    transparent 80%
+  ),
+  linear-gradient(45deg, transparent 30%, rgba(59, 130, 246, 0.04) 50%, transparent 70%),
+  linear-gradient(-45deg, transparent 30%, rgba(139, 92, 246, 0.04) 50%, transparent 70%);
   pointer-events: none;
   animation: lightPulse 8s ease-in-out infinite alternate;
 }
@@ -382,9 +382,8 @@ onMounted(() => {
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(ellipse 800px 400px at center, rgba(59, 130, 246, 0.12) 0%, transparent 70%),
-    linear-gradient(45deg, transparent 30%, rgba(139, 92, 246, 0.05) 50%, transparent 70%),
-    linear-gradient(-45deg, transparent 30%, rgba(16, 185, 129, 0.04) 50%, transparent 70%);
+    radial-gradient(ellipse 1000px 500px at center, rgba(186, 197, 215, 0.08) 0%, transparent 40%),
+  linear-gradient(45deg, transparent 40%, rgba(139, 92, 246, 0.03) 50%, transparent 60%);
   animation: heroGlow 10s ease-in-out infinite alternate;
 }
 
@@ -413,7 +412,7 @@ onMounted(() => {
   font-weight: 700;
   margin: 0 0 20px;
   line-height: 1.2;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #10b981 100%);
+  background: linear-gradient(135deg, #0ce7c8 30%, #18d593 40%, #f2bc61 60%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
