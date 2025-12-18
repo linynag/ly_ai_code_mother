@@ -5,8 +5,8 @@
       <a-col flex="200px">
         <RouterLink to="/">
           <div class="header-left">
-            <img class="logo" src="@/assets/logo.png" alt="Logo" />
-            <h1 class="site-title">ThinkWave</h1>
+            <img class="logo" src="@/assets/logo.png" alt="Logo" style="height: 36px; width: 36px;" />
+            <h1 class="site-title" style="font-size: 24px;">ThinkSee</h1>
           </div>
         </RouterLink>
       </a-col>

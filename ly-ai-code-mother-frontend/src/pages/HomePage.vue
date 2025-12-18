@@ -161,7 +161,11 @@ onMounted(() => {
     <div class="container">
       <!-- 网站标题和描述 -->
       <div class="hero-section">
-        <h1 class="hero-title">所思即所见</h1>
+        <h1 class="hero-title">
+          所思
+          <img src="/favicon.png" alt="logo" class="hero-logo">
+          即所见
+        </h1>
         <p class="hero-description">与 AI 对话轻松创建应用和网站</p>
       </div>
 
@@ -169,7 +173,7 @@ onMounted(() => {
       <div class="input-section">
         <a-textarea
           v-model:value="userPrompt"
-          placeholder="使用ThinkWave创建个人博客网站"
+          placeholder="描述你脑海中网站的功能和外观..."
           :rows="4"
           :maxlength="1000"
           class="prompt-input"
@@ -223,6 +227,26 @@ onMounted(() => {
             )
           "
         >作品展示网站
+        </a-button
+        >
+        <a-button
+          type="default"
+          @click="
+            setPrompt(
+              '创建一个在线学习平台，包含课程列表、视频播放、作业提交、考试测验、学习进度跟踪、讨论区等功能。采用现代化的教育风格设计，支持课程分类、教师管理、学生互动、证书颁发等。',
+            )
+          "
+        >在线学习平台
+        </a-button
+        >
+        <a-button
+          type="default"
+          @click="
+            setPrompt(
+              '构建一个社区论坛网站，包含板块分类、帖子发布、评论回复、用户等级、积分系统、私信功能、活动报名等。采用简洁的社区风格设计，支持富文本编辑、图片上传、话题标签、热门推荐等。',
+            )
+          "
+        >社区论坛
         </a-button
         >
       </div>
@@ -381,8 +405,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    radial-gradient(ellipse 1000px 500px at center, rgba(186, 197, 215, 0.08) 0%, transparent 40%),
+  background: radial-gradient(ellipse 1000px 500px at center, rgba(186, 197, 215, 0.08) 0%, transparent 40%),
   linear-gradient(45deg, transparent 40%, rgba(139, 92, 246, 0.03) 50%, transparent 60%);
   animation: heroGlow 10s ease-in-out infinite alternate;
 }
@@ -408,29 +431,32 @@ onMounted(() => {
 }
 
 .hero-title {
-  font-size: 56px;
+  font-family: "Brush Script MT", cursive;
+  font-size: 78px;
   font-weight: 700;
   margin: 0 0 20px;
   line-height: 1.2;
-  background: linear-gradient(135deg, #0ce7c8 30%, #18d593 40%, #f2bc61 60%);
+  background: linear-gradient(135deg, #6ae0d1 20%, hsl(207, 77%, 68%) 30%, #6edfdd 50%, #edd29b 60%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: -1px;
   position: relative;
   z-index: 2;
-  animation: titleShimmer 3s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
 }
 
-@keyframes titleShimmer {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
+.hero-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  filter: drop-shadow(0 2px 4px rgb(113, 164, 156));
+  display: block;
 }
+
 
 .hero-description {
   font-size: 20px;
