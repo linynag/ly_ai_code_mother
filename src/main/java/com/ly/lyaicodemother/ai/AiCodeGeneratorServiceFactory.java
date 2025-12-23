@@ -2,7 +2,7 @@ package com.ly.lyaicodemother.ai;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.ly.lyaicodemother.ai.tools.FileWriteTool;
+import com.ly.lyaicodemother.ai.tools.ToolManager;
 import com.ly.lyaicodemother.exception.BusinessException;
 import com.ly.lyaicodemother.exception.ErrorCode;
 import com.ly.lyaicodemother.model.enums.CodeGenTypeEnum;
@@ -45,6 +45,8 @@ public class AiCodeGeneratorServiceFactory {
     private ChatHistoryService chatHistoryService;
     @Resource
     private StreamingChatModel reasoningStreamingChatModel;
+    @Resource
+    private ToolManager toolManager;
 
 
     /**
@@ -113,18 +115,18 @@ public class AiCodeGeneratorServiceFactory {
             case VUE_PROJECT -> AiServices.builder(AiCodeGeneratorService.class)
                     .streamingChatModel(reasoningStreamingChatModel)
                     .chatMemoryProvider(memoryId -> chatMemory)
-                    .tools(new FileWriteTool())
+                    .tools(toolManager.getAllTools())
                     .hallucinatedToolNameStrategy(toolExecutionRequest -> ToolExecutionResultMessage.from(
-                            toolExecutionRequest, "Error: there is no tool named " + toolExecutionRequest.name() + ".")
-                    )
+                            toolExecutionRequest, "Error: there is no tool called " + toolExecutionRequest.name()
+                    ))
                     .build();
+
             case HTML, MULTI_FILE -> AiServices.builder(AiCodeGeneratorService.class)
                     .chatModel(chatModel)
                     .streamingChatModel(openAiStreamingChatModel)
                     .chatMemory(chatMemory)
                     .build();
-            default ->
-                    throw new BusinessException(ErrorCode.SYSTEM_ERROR, "不支持的代码生成类型：" + codeGenTypeEnum);
+            default -> throw new BusinessException(ErrorCode.SYSTEM_ERROR, "不支持的代码生成类型：" + codeGenTypeEnum);
 
         };
     }
